@@ -1,0 +1,86 @@
+<div id="index">
+	<% if user_signed_in? %>
+	  Logged in as <strong><%= current_user.email %></strong>.
+	  Role:<%= current_user.roles_name %>
+
+			  <%# if current_user.image.attached? %>
+			    <!-- <td><%# current_user.images.each do |i| %>
+			    	<%#= image_tag i %>
+			    </td>
+			    <%#end%>
+			  <%#else%>
+			  	<%#= form_for(current_user, as: User, url: registration_path(User), html: { method: :put }) do |f| %>
+			  	<div class="field">
+				   <%#= f.label :images %>
+				   <%#= f.file_field :images, multiple: true %>
+					</div>
+					<div class="actions">
+	   			 <%#= f.submit "upload" %>
+	  			</div>
+	  			<td><%#= image_tag current_user.image %></td>
+					<%# end %>
+			  <%# end %> -->
+	<div class="table-responsive">		  
+	  <table class="table table-bordered table-dark table-hover">
+	  	<head class="thead-light" >
+	  		<th>User Name</th>
+	  		<th>Title</th>
+	  		<th>Image</th>
+	  		<th>Details</th>
+	  		<th>Likes</th>
+	  	</head>
+	  	<body>
+	  	  <% @posts.each do |p| %> 
+	  		<tr>
+	  		<td><%= p.user.user_name %></td>
+		  	<td><%= p.title %></td>
+
+		  	<td>
+		  		<% if p.image.attached? %>
+		      	<%= image_tag p.image ,:size => "130x90"%>
+		      	<% if  current_user.has_role? :superuser or p.user_id == current_user.id %>
+		      			<%=link_to"Delete",post_delete_image_path(p),method: :post,data:{confirm:"Are You Sure"}%>
+		      	<% end %>
+		    	<%else%>
+			    	<% if  current_user.has_role? :superuser or p.user_id == current_user.id %>
+						      <%= form_for(p, as: Post, url: post_path(p), html: { method: :put },remote: true) do |f| %>
+						      <div class="field">
+						       <%= f.label :image %>
+						       <%= f.file_field :image %>
+						      </div>
+						      <div class="actions">
+						       <%= f.submit "upload" %>
+						      </div>
+						      <%#= image_tag current_user.image %>
+					       <% end %>
+					  <% end %>     
+	    	  <% end %>  
+		  	</td>
+
+		  	<td>
+		  		<%=link_to "Show",p,:remote => true %>
+			  	<% if  current_user.has_role? :superuser or p.user_id == current_user.id %>
+				  	<%=link_to "Edit",edit_post_path(p),:remote => true %>
+				  	<%=link_to"Delete",p, method: :delete,data:{confirm:"Are You Sure"},:remote => true, :class => 'delete_post'%>
+			  	<%end%>
+		  	</td>
+
+		  	<td>
+		  		<div class="likee_<%= p.id %>">
+			  		<%= render "likes/likeunlike",p:p %>
+			  	</div>
+
+		  	</td>
+
+		    </tr>
+		    <%end%>
+	  	</body>
+	  	</table>
+	  </div>	
+	  	<%= link_to "New Post", new_post_path(user_id:current_user.id),:remote => true %>
+
+	<% end %>
+	
+</div>
+
+

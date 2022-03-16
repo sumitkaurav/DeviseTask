@@ -1,0 +1,8 @@
+
+<% pre_like = p.likes.find { |like| like.user_id == current_user.id} %>
+<% if pre_like.present? %>
+  <%= button_to 'Unlike', post_like_path(p, pre_like), method: :delete,:remote => true, :class => 'unlike' %>
+<% else %>
+  <%= button_to 'Like', post_likes_path(p), method: :post,:remote => true, :class => 'like' %>
+<% end %>
+<%= p.likes.count %> <%= (p.likes.count) == 1 ? 'Like' : 'Likes'%>

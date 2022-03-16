@@ -1,0 +1,75 @@
+<div id="postshow">
+<h1>Post</h1>
+	<div class="table-responsive">		  
+	  <table class="table table-bordered">
+	  	<head class="thead-dark">
+			<th>Title</th>
+			<th>Description</th>
+			<th>Image</th>
+			<th>ID</th>
+		</head>
+		<body>
+			<tr>
+				<td><%= @post.title %></td>
+				<td><%= @post.description %></td>
+				<% if @post.image.attached? %>
+				<td><%= image_tag @post.image,:size => "130x90" %></td>
+				<td><%= post_id(@post) %></td>
+				<% end %>
+			</tr>
+		</body>
+	</table><br>
+	</div>
+
+	<div class="table-responsive">		  
+	  <table class="table table-bordered">
+	  	<head class="thead-dark">
+			<th>Comments</th>
+			<th>Likes</th>
+		</head>
+		<body>
+			<% @post.comments.each do |c| %>
+			<tr>
+				<td><%= c.body %></td>
+				<td>
+		  		<% pre_like = c.clikes.find { |like| like.user_id == current_user.id} %>
+					<% if pre_like %>
+					  <%= button_to 'Unlike', comment_clike_path(c, pre_like,post_id: @post.id), method: :delete %>
+					<% else %>
+					  <%= button_to 'Like', comment_clikes_path(c,post_id: @post.id), method: :post %>
+					<% end %>
+					<p><%= c.clikes.count %> <%= (c.clikes.count) == 1 ? 'Like' : 'Likes'%></p>
+			  	</td>
+			</tr>
+			<%end%>
+		</body>
+	</table><br>
+  </div>
+
+<div class="popup-overlay">
+  <!--Creates the popup content-->
+  <div class="popup-content">
+      <%= form_with model: Comment.new ,local: false ,class: 'create_comment' do |f| %>
+
+						<div>	
+							<%= f.hidden_field :post_id, value:@post.id %>	
+						</div>
+
+						<div>
+						    <%= f.label :comment %><br/>
+						    <%= f.text_area :body %>
+						</div>
+
+						<div>
+						    <%= f.submit %>
+						</div>
+			<% end %>
+    <!--popup's close button-->
+    <button class="close">Close</button> 
+  </div>
+</div>
+<!--Content shown when popup is not displayed-->
+<%=button_to "Comment",new_comment_path(post_id: @post.id),method: :get,:remote => true, :class => 'open'%>
+
+</div>
+

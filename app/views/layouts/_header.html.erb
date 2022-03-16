@@ -1,0 +1,30 @@
+<nav class="navbar  navbar-dark bg-primary">
+  <a class="navbar-brand" href="/">User</a>
+  <div class="d-flex" >
+  <% if user_signed_in? %>
+  <%= button_to "Home", root_path, method: :get, :class => 'btn btn-primary ' %>
+    <% if current_user.image.attached? %>
+      <%= image_tag current_user.image ,:size => "90x60"%>
+    <%else%>
+      <%= form_for(current_user, as: User, url: registration_path(User), html: { method: :put }) do |f| %>
+      <div class="field">
+       <%= f.label :image %>
+       <%= f.file_field :image %>
+      </div>
+      <div class="actions">
+       <%= f.submit "upload" %>
+      </div>
+      <%#= image_tag current_user.image %>
+      <% end %>
+    <% end %>
+    <%= button_to 'Edit profile', edit_user_registration_path,method: :get, :class => 'btn btn-primary' %>
+    <%= button_to "Logout", destroy_user_session_path, method: :delete, :class => 'btn btn-primary '  %>
+ 
+  <% else %>
+    
+      <%= button_to "Sign up", new_user_registration_path, method: :get , :class => 'btn btn-primary ' %>
+      <%= button_to "Login", new_user_session_path, :class => 'btn btn-primary ' %>
+    
+  <% end %>
+  </div>
+</nav>

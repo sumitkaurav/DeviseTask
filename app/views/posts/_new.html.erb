@@ -1,0 +1,30 @@
+<h1>New Post</h1>
+<%= form_with model: @post, local: false ,class: 'new_post' do |f| %>
+
+<div>
+	<%= hidden_field_tag :user_id, @user.id %>
+</div>
+<div>
+   <%= f.label :title %><br />
+   <%= f.text_field :title %>
+</div>
+
+<div>
+  <%= f.label :description %><br />
+  <%= f.text_field :description %>
+</div>
+
+Comment:
+  <ul>
+    <%= f.fields_for :comments do |comments_form| %>
+      <li>
+        <%= comments_form.label :comment %>
+        <%= comments_form.text_field :body %>
+      </li>
+    <% end %>
+  </ul>
+
+<div>
+    <%= f.submit  %>
+</div>
+<% end %>

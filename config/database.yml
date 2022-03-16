@@ -1,0 +1,8 @@
+development:
+ database: DeviseTask
+ adapter: postgresql
+ username: postgres
+ password: 12345678
+ host: localhost
+ pool: 5
+ timeout: 5000
